@@ -27,10 +27,7 @@ iOS开发中，如果是由于占用内存或者cpu过高导致性能下降，�
 可以在上面区域的Leaks部分看到对应的时间点产生的溢出，选择后在下面区域的Statistics>Allocation Summary能够看到泄漏的对象，同样可以通过Stack Trace查看到具体对应的代码区域。
 
 ### UIImage
-这里要主要是会影响内存的开销，需要权衡下imagedNamed和imageWithContentsOfFile，了解两者特性后，在只需要显示一次的图片用后者，这样会减少内存的消耗，但是页面显示会增加Image IO的消耗，这个需要注意下。由于imageWithContentsOfFile不缓存，所以需要在每次页面显示前加载一次，这个IO的操作也是需要考虑权衡的一个点。
-
-### 页面加载
-如果一个页面内容过多，view过多，这样将长页面中的需要滚动才能看到的那个部分视图内容通过开启新的线程同步的加载。
+这里要主要是会影响内存的开销，需要权衡下imagedNamed和imageWithContentsOfFile，了解两者特性后，在只需要显示一次的图片用后者，这样会减少内存的消耗，但是页面显示会增加Image IO的消耗，这个需要注意下。由于imageWithContentsOfFile不缓存，所以需要在每次页面显示前加载一次，这个IO的操作也是需要考虑权衡的一个点。如果是从本地的NSData转换成UIImage, 最好使用`dataWithContentsOfURL`,并且采用`NSDataReadingMappedIfSafe`模式，这种模式系统会帮我们按需要加载数据，不会一次性加载全部。
 
 ### 优化首次加载时间
 通过Time Profier可以查看到启动所占用的时间，如果太长可以通过Heaviest Stack Trace找到费时的方法进行改造。
